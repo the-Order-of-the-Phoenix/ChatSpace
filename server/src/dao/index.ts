@@ -4,16 +4,18 @@
  */
 import * as mongoose from 'mongoose'
 
-const db: string = 'mongodb://'
+import config from '../config'
+
+const db: string = `mongodb://${config.db.host}:${config.db.port}`
 
 export const init = () => {
   mongoose.connect(db, {
     useNewUrlParser: true,
-    authSource: 'admin',
-    dbName: 'test',
+    authSource: config.db.authDb,
+    dbName: config.db.db,
     auth: {
-      user: 'admin',
-      password: 'password',
+      user: config.db.user,
+      password: config.db.pass,
     }
   })
 }
