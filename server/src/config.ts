@@ -1,11 +1,11 @@
 const config = {
   db: {
-    host: '',
-    port: '',
-    user: '',
-    pass: '',
-    db: '',
-    authDb: ''
+    host: '39.108.12.107',
+    port: '27017',
+    user: 'admin',
+    pass: 'password',
+    db: 'test',
+    authDb: 'admin'
   }
 }
 

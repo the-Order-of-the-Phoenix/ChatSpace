@@ -5,7 +5,6 @@ import * as model from '../schema'
 
 export const login = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
   let body = ctx.request.body
-  ctx.throw()
   let username: string = body.username
   let password: string = body.password
 
@@ -14,7 +13,7 @@ export const login = async (ctx: koa.ParameterizedContext, next: () => Promise<a
   if (user) {
     ctx.response.body = user
   } else {
-    ctx.response.body = 
+    ctx.throw(404, '找不到用户')
   }
   
 }
