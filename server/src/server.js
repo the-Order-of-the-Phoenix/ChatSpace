@@ -1,8 +1,8 @@
-import * as Koa from 'koa';
-import * as logger from 'koa-logger';
-import * as session from 'koa-session';
-import * as bodyParser from 'koa-bodyparser';
-import * as serve from 'koa-static'
+import Koa from 'koa';
+import logger from 'koa-logger';
+import session from 'koa-session';
+import bodyParser from 'koa-bodyparser';
+import serve from 'koa-static'
 
 import getRouter from './controller'
 import * as dao from './dao'

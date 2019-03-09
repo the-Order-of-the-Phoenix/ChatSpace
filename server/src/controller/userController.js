@@ -1,7 +1,7 @@
-import * as Router from 'koa-router';
-import * as koa from 'koa'
+import Router from 'koa-router';
+import koa from 'koa'
 
-import * as model from '../schema'
+import model from '../schema'
 
 export const login = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
   let body = ctx.request.body

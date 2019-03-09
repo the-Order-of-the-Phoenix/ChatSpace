@@ -2,7 +2,7 @@
 /**
  * controller中放置所有路由
  */
-import * as Router from 'koa-router';
+import Router from 'koa-router';
 
 import * as UserController from './userController'
 

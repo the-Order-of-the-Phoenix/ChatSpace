@@ -2,7 +2,7 @@
  * 
  * dao用于封装数据库的增删改查以及必要的数据验证
  */
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
 import config from '../config'
 
