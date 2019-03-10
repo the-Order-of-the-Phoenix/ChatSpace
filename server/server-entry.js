@@ -6,6 +6,9 @@ require('babel-core/register')({
         'node': true
       }
     }]
+  ],
+  "plugins": [
+    // "typecheck"
   ]
 })
 require('./src/server.js')

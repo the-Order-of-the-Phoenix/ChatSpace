@@ -40,6 +40,7 @@
 | _id          | ObjectId | unique, indexed |         |
 | List<String> | ObjectId |                 |         |
 | created_at   | date     |                 |         |
+| requesting   | ObjectId |                 |         |
 
 ## Files
 

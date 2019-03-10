@@ -6,25 +6,37 @@ import serve from 'koa-static'
 
 import getRouter from './controller'
 import * as dao from './dao'
+import errorHandler from "./controller/errorHandler";
 
 const app = new Koa();
 const router = getRouter();
 const staticRoot = serve('../front/dist')
 
-console.log(__dirname)
+console.log(`server vfile root is ${__dirname}`)
 
 dao.init()
 
-app.use(bodyParser());
-app.use(router.routes());
-app.use(session(app))
+app.keys = ['chat space key'];
+const CONFIG = {
+    key: 'koa:sess', /** cookie的名称，可以不管 */
+    maxAge: 7200000, /** (number) maxAge in ms (default is 1 days)，cookie的过期时间，这里表示2个小时 */
+    overwrite: true, /** (boolean) can overwrite or not (default true) */
+    httpOnly: true, /** (boolean) httpOnly or not (default true) */
+    signed: true, /** (boolean) signed or not (default true) */
+};
+
 app.use(logger())
+app.use(errorHandler)
+app.use(bodyParser())
+app.use(router.routes())
+app.use(session(CONFIG, app))
 app.use(staticRoot)
+
 
 app.listen(3000);
 
 app.on('error', async (err, ctx) => {
-    console.error(err);
+    console.error('error:', err)
 })
 
 console.log('Server running on port 3000');
