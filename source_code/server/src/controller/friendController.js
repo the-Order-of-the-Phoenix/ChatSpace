@@ -16,23 +16,10 @@ export const requestFriend = async (ctx: koa.ParameterizedContext, next: () => P
     status: 'requesting'
   })
 
-  //对应好友的好友列表中增加记录
   const query = model.User.findById(targetUserId)
   const tarUser = await query.exec()
 
-  console.log(friend)
-  console.log(tarUser)
-
-  if (!tarUser) {
-    ctx.throw(new BaseError(404, '对应用户不存在'))
-  }
-
-
-  // model.User.findByIdAndUpdate(targetUserId, {
-  //   '$push': {
-  //     'friends': friend._id
-  //   }    
-  // })
+  model.User.update()
   ctx.throw(new BaseError(200, 'ok'))
 }
 
@@ -42,11 +29,6 @@ export const delFriend = async (ctx: koa.ParameterizedContext, next: () => Promi
 }
 
 export const getFriendList = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
-
-}
-
-export const getRequestingFriendList = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
-
 
 }
 

@@ -10,8 +10,7 @@ export const sendMessage = async (ctx: koa.ParameterizedContext, next: () => Pro
 }
 
 export const getMessage = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
-  console.log(ctx.query);
-  ctx.throw(new BaseError(200, 'ok'))
+
 }
 
 export const deleteMessage = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
