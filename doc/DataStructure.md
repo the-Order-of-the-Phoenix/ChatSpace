@@ -38,7 +38,7 @@
 | Field        | Type     | Restrict        | Example |
 | ------------ | -------- | --------------- | ------- |
 | _id          | ObjectId | unique, indexed |         |
-| List<String> | ObjectId |                 |         |
+| member       | ObjectId |                 |         |
 | created_at   | date     |                 |         |
 | requesting   | ObjectId |                 |         |
 
