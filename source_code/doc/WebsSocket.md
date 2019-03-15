@@ -1,5 +1,0 @@
-# Protocol
-
-## Actions
-
-message
