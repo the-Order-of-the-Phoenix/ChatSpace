@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import hash from './hash'
 import HelloWorld from '@/components/HelloWorld'
 import test from '@/pages/ws'
-import Register from '@/pages/register'
+import Register from '@/pages/Register'
 import Login from '@/pages/Login'
 import Chat from '@/pages/Chat'
 
