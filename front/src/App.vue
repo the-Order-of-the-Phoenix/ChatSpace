@@ -1,23 +1,56 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <div v-loading="isLoading"></div>
     <router-view/>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
+import 'typeface-roboto'
+import Event from '@/services/dispatch'
+
+const event = Event()
+
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    ...mapGetters(['isLoading'])
+  },
+  methods: {
+    ...mapActions(['addLoading', 'removeLoading'])
+  },
+  beforeMount () {
+    event.on('startLoad', () => {
+      this.addLoading()
+    })
+    event.on('endLoad', () => {
+      this.removeLoading()
+    })
+  },
 }
 </script>
 
-<style>
+<style lang="scss">
+body {
+  margin: 0;
+}
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'roboto', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
+  padding: 0;
+  background-color: #64b5f6;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
 }
 </style>

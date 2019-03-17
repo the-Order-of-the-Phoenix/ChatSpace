@@ -1,0 +1,16 @@
+{
+  "register": "注册",
+  "username": "用户名",
+  "password": "密码",
+  "not_empty": "{0}不能为空",
+  "too_short": "{0}不能短于{1}个字母",
+  "too_long": "{0}不能超过{1}个字母",
+  "submit": "提交",
+  "reset": "重置",
+  "agree_protocol": "同意用户协议",
+  "must_agree_protocol": "必须同意用户协议",
+  "must_be_number": "{0}必须为数字",
+  "login": "登录",
+  "phone_number": "手机号",
+  "refresh": "刷新"
+}

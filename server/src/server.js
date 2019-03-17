@@ -20,6 +20,8 @@ console.log(`server vfile root is ${__dirname}`)
 
 dao.init()
 
+const users = {}
+
 app.keys = ['chat space key'];
 const CONFIG = {
     key: 'koa:sess', /** cookie的名称，可以不管 */
@@ -35,7 +37,7 @@ app.use(bodyParser())
 app.use(router.routes())
 app.use(session(CONFIG, app))
 app.use(staticRoot)
-app.ws.use(wsRouter.routes())
+app.ws.use(wsRouter.routes(users))
 
 
 app.listen(3000);
