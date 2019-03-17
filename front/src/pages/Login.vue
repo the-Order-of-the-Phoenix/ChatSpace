@@ -16,8 +16,8 @@
         <mu-form-item :label="$t('password')" prop="password" :rules="passwordRules">
             <mu-text-field type="password" v-model="user.password" prop="password"></mu-text-field>
         </mu-form-item>
-        <mu-form-item prop="isAgree" :rules="argeeRules">
-          <mu-checkbox :label="$t('must_agree_protocol')" v-model="user.isAgree"></mu-checkbox>
+        <mu-form-item prop="shouldRemember">
+          <mu-checkbox :label="$t('should_remember_username')" v-model="user.shouldRemember"></mu-checkbox>
         </mu-form-item>
         <mu-form-item id="button">
           <mu-button color="primary" @click="submit">{{$t('submit')}}</mu-button>
@@ -29,12 +29,15 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 import hash from '@/router/hash'
+import storageService from '@/services/storageService'
 
 const initUser = {
-  username: '',
+  username: storageService.get('username', ''),
   password: '',
-  isAgree: true
+  shouldRemember: true
 }
 
 export default {
@@ -43,23 +46,29 @@ export default {
     return {
       user: initUser,
       usernameRules: [
-        { validate: (val) => !!val, message: this.$t('not_empty', [this.$t('username')])},
-        { validate: (val) => val.length >= 4, message: this.$t('too_short', [this.$t('username'), 4])},
-        { validate: (val) => val.length <= 12, message: this.$t('too_short', [this.$t('username'), 12])}
+        { validate: (val) => !!val, message: this.$t('not_empty', [this.$t('username')])}
       ],
       passwordRules: [
-        { validate: (val) => !!val, message: this.$t('not_empty', [this.$t('username')])},
-        { validate: (val) => val.length >= 4 && val.length <= 10, message: this.$t('too_short', [this.$t('password'), 4])},
-        { validate: (val) => val.length <= 20, message: this.$t('too_long', [this.$t('password'), 20])}
+        { validate: (val) => !!val, message: this.$t('not_empty', [this.$t('password')])}
       ],
-      argeeRules: [{ validate: (val) => !!val, message: 'must_agree_protocol'}],
       hash
     }
   },
+  computed: {
+  },
   methods: {
+    ...mapActions(['login']),
     async submit () {
-      let form = await this.$refs.form.validate()
-      console.log(form)
+      let valid = await this.$refs.form.validate()
+      if (valid) {
+        if (this.user.shouldRemember) {
+          storageService.set('username', this.user.username)
+        }
+        let res = await this.login(this.user)
+        if (res.ok) {
+          this.$router.push({path: hash.chatHash})
+        }
+      }
     },
     clear () {
       this.$refs.form.clear();

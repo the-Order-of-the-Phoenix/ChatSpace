@@ -1,12 +1,20 @@
 <template>
   <div id="messager-view">
-    
+    <MessageContentPanel></MessageContentPanel>
+    <InputPanel></InputPanel>
   </div>
 </template>
 
 <script>
+import MessageContentPanel from './MessageContentPanel'
+import InputPanel from './InputPanel'
+
 export default {
-  name: 'MessagerView'
+  name: 'MessagerView',
+  components: {
+    MessageContentPanel,
+    InputPanel
+  }
 }
 </script>
 

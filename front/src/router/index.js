@@ -15,8 +15,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'default',
+      redirect: hash.registerHash
     },
     {
       path: '/ws',

@@ -16,3 +16,7 @@ export const CHANGE_NAV = 'CHANGE_NAV'
 // Loading 相关
 export const ADD_LOADING = 'ADD_LOADING'
 export const REMOVE_LOADING = 'REMOVE_LOADING'
+// toast
+export const SEND_TOAST = 'SEND_TOAST'
+export const SEND_ERROR = 'SEND_ERROR'
+export const SEND_SUCCESS = 'SEND_SUCCESS'

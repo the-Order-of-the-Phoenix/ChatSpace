@@ -4,6 +4,7 @@ import session from 'koa-session'
 import bodyParser from 'koa-bodyparser'
 import serve from 'koa-static'
 import websockify from 'koa-websocket'
+import cors from 'koa2-cors'
 
 import getRouter from './controller'
 import * as dao from './dao'
@@ -29,13 +30,20 @@ const CONFIG = {
     overwrite: true, /** (boolean) can overwrite or not (default true) */
     httpOnly: true, /** (boolean) httpOnly or not (default true) */
     signed: true, /** (boolean) signed or not (default true) */
-};
-
+}
 app.use(logger())
 app.use(errorHandler)
 app.use(bodyParser())
-app.use(router.routes())
-app.use(session(CONFIG, app))
+app.use(
+    cors({
+        origin: function (ctx) {
+            return ctx.request.header.origin
+        },
+        credentials: true
+    })
+);
+app.use(session(CONFIG, app));
+app.use(router.routes());
 app.use(staticRoot)
 app.ws.use(wsRouter.routes(users))
 

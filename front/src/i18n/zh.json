@@ -12,5 +12,9 @@
   "must_be_number": "{0}必须为数字",
   "login": "登录",
   "phone_number": "手机号",
-  "refresh": "刷新"
+  "refresh": "刷新",
+  "send": "发送",
+  "message_not_more_than": "请发送{0}字以内的消息",
+  "should_remember_username": "是否记住用户名",
+  "sign_out": "登出"
 }

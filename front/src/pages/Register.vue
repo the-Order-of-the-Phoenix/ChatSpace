@@ -32,7 +32,10 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 import hash from '@/router/hash'
+import { register } from '@/services/rest'
 
 const initUser = {
   username: '',
@@ -56,7 +59,7 @@ export default {
         { validate: val => !isNaN(val), message: this.$t('must_be_number', [this.$t('phone_number')])},
       ],
       passwordRules: [
-        { validate: (val) => !!val, message: this.$t('not_empty', [this.$t('username')])},
+        { validate: (val) => !!val, message: this.$t('not_empty', [this.$t('password')])},
         { validate: (val) => val.length >= 4 && val.length <= 10, message: this.$t('too_short', [this.$t('password'), 4])},
         { validate: (val) => val.length <= 20, message: this.$t('too_long', [this.$t('password'), 20])}
       ],
@@ -65,9 +68,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['login']),
     async submit () {
-      let form = await this.$refs.form.validate()
-      console.log(form)
+      let isValid = await this.$refs.form.validate()
+      if (isValid) {
+        let u = this.user
+        let res = await register(u.username, u.password, u.phone)
+        console.log(res)
+        if (res.ok) {
+          this.$toast.success('注册成功，即将自动登录...')
+          this.login(u.username, u.password).then(res => {
+            this.$router.push({path: hash.chatHash})
+          })
+        } else {
+          this.$toast.error('注册失败')
+        }
+      }
     },
     clear () {
       this.$refs.form.clear();

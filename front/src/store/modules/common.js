@@ -1,5 +1,6 @@
 import * as types from '../types'
 import storageService from '@/services/storageService'
+import MuseUIToast from "muse-ui-toast";
 
 const state = {
   curNav: 'home',
@@ -32,6 +33,15 @@ const mutations = {
   },
   [types.REMOVE_LOADING](state) {
     state.loading--
+  },
+  [types.SEND_TOAST](state, message) {
+    MuseUIToast.message(message)
+  },
+  [types.SEND_ERROR](state, message) {
+    MuseUIToast.error(message)
+  },
+  [types.SEND_SUCCESS](state, message) {
+    MuseUIToast.success(message)
   }
 }
 
