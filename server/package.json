@@ -8,7 +8,8 @@
     "start": "tsc && node dist/server.js",
     "build": "tsc",
     "dev": "nodemon --inspect --watch 'src/**/*' -e js,ts,tsx --exec 'node -r ts-node/register' ./src/server.ts",
-    "serve": "nodemon -w 'src/server.js' -w src server-entry.js"
+    "serve": "nodemon -w 'src/server.js' -w src server-entry.js",
+    "pm2": "pm2 start server-entry.js --watch src"
   },
   "author": "aak1247",
   "license": "ISC",

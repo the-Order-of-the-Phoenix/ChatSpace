@@ -75,3 +75,16 @@ export const getChats = () => {
 export const retrieveMessage = () => {
 
 }
+
+export const CreateWebSocket = function (urlValue) {
+  if (window.WebSocket) return new WebSocket(urlValue)
+  if (window.MozWebSocket) return new MozWebSocket(urlValue)
+  return {}
+}
+
+export const buildWsMessage = (action, body) => {
+  return JSON.stringify({
+    action,
+    body
+  })
+}

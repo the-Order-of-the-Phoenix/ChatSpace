@@ -1,4 +1,4 @@
-const getMsgEntityFromMsg = (msg: string) => {
+export const getMsgEntityFromMsg = (msg: string) => {
   let entity = {}
   try {
     entity = JSON.parse(msg)
@@ -8,14 +8,10 @@ const getMsgEntityFromMsg = (msg: string) => {
   }
 }
 
-const getUserIdFromSession = (session: string, sessionDecoder) =>{
+export const getUserIdFromSession = (session: string, sessionDecoder) =>{
   if (sessionDecoder && sessionDecoder instanceof Function) {
     return sessionDecoder(session)
   } else {
     return session
   }
-}
-
-export default {
-  getMsgEntityFromMsg
 }

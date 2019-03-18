@@ -17,12 +17,13 @@ const actions = {
     storageService.set('userInfo')
     commit(types.REMOVE_USER_INFO)
   },
-  async login({ commit }, user) {
+  async login({ commit, dispatch }, user) {
     let res = await login(user.username, user.password)
     let resJson = await res.json()
     if (res.ok) {
-      let userInfo = new User(resJson.username, resJson.phone, resJson.__id, resJson.friends)
+      let userInfo = new User(resJson.username, resJson.phone, resJson._id, resJson.friends)
       commit(types.SET_USER_INFO, userInfo)
+      storageService.set('userInfo', userInfo)
       commit(types.SET_LOGIN_STATUS)
     } else {
       commit(types.SEND_ERROR, '用户名或密码错误')
@@ -48,6 +49,7 @@ const getters = {
 
 const mutations = {
   [types.SET_USER_INFO](state, userInfo) {
+    debugger
     state.userInfo = userInfo
   },
   [types.REMOVE_USER_INFO](state) {

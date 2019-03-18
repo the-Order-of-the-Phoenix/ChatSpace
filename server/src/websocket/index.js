@@ -1,31 +1,69 @@
 import Router from 'koa-router'
 
 import { getMsgEntityFromMsg, getUserIdFromSession } from './util'
+import model from '../schema'
+import { Schema } from 'mongoose'
+
+const { ObjectId } = Schema.Types
 
 function getWSRouter(users: object) {
   const router = new Router({})
-  router.all('/', async (ctx, next) => {
-    // 可以存当前user
-    console.log('web socket')
-    ctx.websocket.on('message', function (message) {
+  router.all('/broadcast', async (ctx, next) => {
+    console.log('broadcast')
+  })
+  router.all('/:friendId', async (ctx, next) => {
+    console.log('friendId')
+    console.log(ctx.params)
+    let friends = {}
+    let friendId = ctx.params.friendId
+    ctx.websocket.on('message', async function (message) {
       // 返回给前端的数据
       let messageObj = getMsgEntityFromMsg(message)
+      let userId = getUserIdFromSession(messageObj.body.session);
+      console.log(userId)
       if (messageObj.action == 'connect') {
-        let userId = getUserIdFromSession(messageObj.body.session)
-        console.log('connect to server')
+        // 不处理
       }
       if (messageObj.action == 'message') {
-        console.log("message")
+        delete messageObj.session
+        ctx.websocket.send(JSON.stringify(messageObj))
+        let receiverId = messageObj.body.receiver
+        let friendId = messageObj.body.friend
+        let content = messageObj.body.content
+        let receiver = await model.User.findById(receiverId).exec()
+        let friend = await model.Friend.findById(friendId).exec()
+        // 创建消息
+        let message = await model.Message.create({
+          sender: new ObjectId(userId),
+          receiver: receiverId,
+          type: 'text',
+          content,
+          created_at: new Date()
+        })
+        // 查询关联
+        let friendMessage = await model.FriendMessage.findOne({
+          friend: friendId
+        }).exec()
+        if (!friendMessage) {
+          friendMessage = await model.FriendMessage.create({
+            friend: friendId
+          })
+        }
+        await model.FriendMessage.findByIdAndUpdate(friendMessage._id, {
+          '$push': {
+            messages: message._id
+          }
+        }).exec()
       }
       if (messageObj.action == 'picture') {
-
+        delete messageObj.session
+        ctx.websocket.send(JSON.stringify(messageObj))
       }
-      ctx.websocket.send(JSON.stringify(messageObj))
-      
     })
-
+    ctx.websocket.on('close', function () {
+      console.log('channel ', friendId,' closed')
+    })
   })
-
   return router
 }
 

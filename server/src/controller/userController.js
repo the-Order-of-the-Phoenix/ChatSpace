@@ -33,7 +33,7 @@ export const register = async (ctx: koa.ParameterizedContext, next: () => Promis
   const phone: string = requestBody.phone
   const username: string = requestBody.username
   const password: string = requestBody.password
-  const user = model.User.create({
+  const user = await model.User.create({
     username,
     password,
     phone

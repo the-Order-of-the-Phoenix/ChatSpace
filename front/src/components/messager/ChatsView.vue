@@ -18,7 +18,7 @@ const chat = (name, message, date) => ({
 })
 const now = new Date()
 const chats = []
-for (var i = 0 ; i < 20 ; ++i) {
+for (var i = 0 ; i < 5 ; ++i) {
   chats.push(chat('好友' + i, '早上好' + i, now))
 }
 chats[1].isActive = true

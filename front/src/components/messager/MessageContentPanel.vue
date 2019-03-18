@@ -5,8 +5,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
-  name: 'MessageContentPanel'
+  name: 'MessageContentPanel',
+  methods: {
+    ...mapActions([])
+  },
 }
 </script>
 

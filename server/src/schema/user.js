@@ -47,7 +47,10 @@ const UserSchema = new Schema({
 
   city: String,
 
-  friends: [ObjectId],
+  friends: [{
+    type: ObjectId,
+    ref: 'friend'
+  }],
 
   last_modified: Date,
 

@@ -40,7 +40,6 @@ function getRouter(): Router {
 
   router.put('/friend/:id', UserController.needLogin, FriendController.modifyFriend)
 
-  //from/to/by
   router.get('/message', UserController.needLogin, MessageController.getMessage)
 
   router.get('/file', UserController.needLogin, FileController.getFilePath)

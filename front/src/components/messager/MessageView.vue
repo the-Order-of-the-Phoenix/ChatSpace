@@ -6,11 +6,23 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+import Event from '@/services/dispatch'
+
 import MessageContentPanel from './MessageContentPanel'
 import InputPanel from './InputPanel'
 
 export default {
   name: 'MessagerView',
+
+  methods: {
+    ...mapActions(['setCurFriend'])
+  },
+
+  mounted() {
+    this.setCurFriend('test')
+  },
+
   components: {
     MessageContentPanel,
     InputPanel

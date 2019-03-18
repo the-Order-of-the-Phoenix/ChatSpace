@@ -10,10 +10,16 @@ const {
 
 const FriendSchema = new Schema({
   member: {
-    type: [ObjectId]
+    type: [{
+      type: ObjectId,
+      ref: 'user'
+    }]
   },
   created_at: Date,
-  source: ObjectId,
+  source: {
+    type: ObjectId,
+    ref: 'user'
+  },
   status: String
 })
 

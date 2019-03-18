@@ -1,0 +1,12 @@
+{
+  "name": "chat-space",
+  "version": "1.0.0",
+  "description": "ChatSpace Application",
+  "author": "aak1247 <aak1247@126.com>",
+  "private": true,
+  "scripts": {
+    "build-front": "cd front && node build/build.js && cd ..",
+    "start-server": "cd server && pm2 start server-entry.js --watch src && cd ..",
+    "start": "npm run build-front && npm run start-server"
+  }
+}

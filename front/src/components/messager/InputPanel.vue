@@ -1,4 +1,4 @@
-<template>
+X<template>
   <div id="input-panel">
     <mu-text-field v-model="message" 
     :placeholder="$t('message_not_more_than', [400])" 
@@ -7,7 +7,7 @@
     :max-length="400"
     full-width
     solo></mu-text-field><br/>
-    <mu-button color="primary" id="input-panel_send">
+    <mu-button color="primary" id="input-panel_send" @click="doSendMessage">
       {{$t('send')}}
       <mu-icon right value="send"></mu-icon>
     </mu-button>
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'InputPanel',
   data () {
@@ -23,8 +25,9 @@ export default {
     }
   },
   methods: {
-    sendMessage() {
-
+    ...mapActions(['sendMessage']),
+    doSendMessage () {
+      this.sendMessage(this.message)
     }
   },
 }

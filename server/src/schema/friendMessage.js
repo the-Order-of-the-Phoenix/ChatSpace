@@ -9,12 +9,18 @@ const {
 } = Schema.Types
 
 const FriendMessageSchema = new Schema({
-  friend: {
-    type: ObjectId,
-    index: true
-  },
-  messages: [ObjectId]
-})
+    friend: {
+        type: ObjectId,
+        ref: 'friend',
+        index: true
+    },
+    messages: [
+        {
+        type: ObjectId,
+          ref: 'message'
+        }
+    ]
+});
 
 const FriendMessage = mongoose.model('friendMessage', FriendMessageSchema)
 
