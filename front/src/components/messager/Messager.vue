@@ -20,7 +20,7 @@ export default {
 
 <style lang="scss">
 #messager {
-  width:40rem;
+  width:55rem;
   height: calc( 100% - 4rem);
   overflow: hidden;
 }

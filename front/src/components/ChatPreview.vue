@@ -6,7 +6,7 @@
         {{name}}
       </span>
       <span class="chat-preview_message">
-        {{message}}
+        {{trim(message, 15)}}
       </span>
     </div>
     <div class="chat-preview_right">
@@ -17,10 +17,16 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { trim } from '@/services/strUtil'
 
 export default {
   name: 'ChatPreview',
   props: ['avator', 'name', 'message', 'time', 'isActive','id'],
+  data () {
+    return {
+      trim
+    }
+  },
   computed: {
     displayTime: function () {
       return this.time || '今天'
@@ -77,7 +83,7 @@ export default {
   &_right {
     display: flex;
     flex-direction: column;
-    width: 2rem;
+    width: 3rem;
   }
 }
 </style>

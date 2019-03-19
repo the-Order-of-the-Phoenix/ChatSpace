@@ -35,7 +35,7 @@ import hash from '@/router/hash'
 import storageService from '@/services/storageService'
 
 const initUser = {
-  username: '',
+  username: storageService.get('username', ''),
   password: '',
   shouldRemember: true
 }
@@ -71,7 +71,6 @@ export default {
       }
     },
     clear () {
-      debugger
       this.$refs.form.clear();
       this.user = initUser
     }
