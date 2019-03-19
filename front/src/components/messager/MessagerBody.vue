@@ -6,10 +6,19 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 import ChatsView from './ChatsView'
 import MessageView from './MessageView'
 export default {
   name: 'MessagerBody',
+
+  methods: {
+    ...mapActions(['initFriends'])
+  },
+  beforeMount() {
+    this.initFriends()
+  },
   components: {
     ChatsView,
     MessageView

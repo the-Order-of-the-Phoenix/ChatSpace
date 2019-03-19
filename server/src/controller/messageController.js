@@ -36,14 +36,11 @@ export const getMessage = async (ctx: koa.ParameterizedContext, next: () => Prom
   //     }}
   //   ]
   // )
-  console.log(queryParam  )
   if (!friendId) {
     ctx.throw(new BaseError(400, 'parameter'))
   }
-  const friendMessageQuery = model.FriendMessage.findOne({friend: friendId}).populate('message')
+  const friendMessageQuery = model.FriendMessage.findOne({friend: friendId}).populate('messages')
   const friendMessage = await friendMessageQuery.exec()
-  console.log(friendMessage)
-  let messages = friendMessage.messages
   // messages = messages.map()
   ctx.response.body = friendMessage
   // ctx.throw(new BaseError(200, 'ok'))

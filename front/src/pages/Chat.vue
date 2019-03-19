@@ -5,10 +5,22 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
+import hash from '@/router/hash'
+
 import Messager from '@/components/messager/Messager'
 
 export default {
   name: 'Chat',
+  computed: {
+    ...mapGetters(['hasLogin'])
+  },
+  beforeMount() {
+    if (!this.hasLogin) {
+      this.$router.push(hash.loginHash)
+    }
+  },
   components: {
     Messager
   }

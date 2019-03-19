@@ -10,6 +10,9 @@
 </template>
 
 <script>
+import {mapGetters, mapActions} from 'vuex'
+import { format } from '@/services/dateUtil'
+
 import ChatPreview from '@/components/ChatPreview'
 import defaultAvator from '@/assets/default_avator.jpg'
 const chat = (name, message, date) => ({
@@ -26,7 +29,36 @@ export default {
   name: 'ChatsView',
   data () {
     return {
-      chats
+      // chats
+    }
+  },
+  computed: {
+    ...mapGetters(['userInfo', 'curFriend', 'friends', 'messages']),
+    chats () {
+      // debugger
+      let friendIds = Object.keys(this.friends)
+      let chats = []
+      for (let id of friendIds) {
+        let chat = {}
+        let friend = this.friends[id]
+        let messages = this.messages[id]
+        let time
+        if (!messages || !messages.length) time = '更早'
+        else {
+          let lastMessage = messages[messages.length - 1]
+          time = lastMessage.date || format(lastMessage.created_at)
+          chat.message = lastMessage.content
+        }
+        if (id == this.curFriend) {
+          chat.isActive = true
+        }
+        chat.name = friend.nickName || friend.name || friend.username
+        chat.time = time
+        chat.id = id
+        chat.avator = friend.avator || defaultAvator
+        chats.push(chat)
+      }
+      return chats
     }
   },
   components: {

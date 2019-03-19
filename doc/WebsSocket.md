@@ -23,10 +23,10 @@
     body: {
         content: "hello world", // message content
         sender: "00000000", // sender user id
-        receiver: "0000000", // receiver user id
         friend: "0000000", // via friend
         session: "xxxxxxx",
-        friend: "xxxxxx" // friend id
+        friend: "xxxxxx", // friend id
+        created_at: "2018-01-01" // only needed in communication from server to client
     }
 }
 ```

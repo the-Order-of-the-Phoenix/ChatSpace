@@ -4,8 +4,6 @@ import { getMsgEntityFromMsg, getUserIdFromSession } from './util'
 import model from '../schema'
 import { Schema } from 'mongoose'
 
-const { ObjectId } = Schema.Types
-
 function getWSRouter(users: object) {
   const router = new Router({})
   router.all('/broadcast', async (ctx, next) => {
@@ -26,6 +24,7 @@ function getWSRouter(users: object) {
       }
       if (messageObj.action == 'message') {
         delete messageObj.session
+        messageObj.body.created_at = new Date()
         ctx.websocket.send(JSON.stringify(messageObj))
         let receiverId = messageObj.body.receiver
         let friendId = messageObj.body.friend
@@ -34,7 +33,7 @@ function getWSRouter(users: object) {
         let friend = await model.Friend.findById(friendId).exec()
         // 创建消息
         let message = await model.Message.create({
-          sender: new ObjectId(userId),
+          sender: userId,
           receiver: receiverId,
           type: 'text',
           content,

@@ -13,10 +13,6 @@ export const login = async (ctx: koa.ParameterizedContext, next: () => Promise<a
   const query = model.User.findOne({ username, password })
   const user = await query.exec()
 
-  console.log(body)
-  
-  console.log(user)
-
   if (user) {
     ctx.cookies.set('userId', user._id, { signed: true, maxAge: 7200000 })
     user.password = undefined
@@ -40,7 +36,7 @@ export const register = async (ctx: koa.ParameterizedContext, next: () => Promis
   })
 
   console.log(`user ${user._id} registered at ${new Date()}`)
-  delete user.password
+  user.password = undefined
   ctx.response.body = user
 }
 
@@ -50,7 +46,7 @@ export const getCurUser = async (ctx: koa.ParameterizedContext, next: () => Prom
   if (id) {
     const query = model.User.findOne({ _id: new Types.ObjectId(id) })
     const user = await query.exec()
-    delete user.password
+    user.password = undefined
     ctx.response.body = user
   } else {
     ctx.throw(new BaseError(404, 'not login yet'))

@@ -21,13 +21,14 @@ export default {
   name: 'InputPanel',
   data () {
     return {
-      message: ""
+      message: ''
     }
   },
   methods: {
     ...mapActions(['sendMessage']),
     doSendMessage () {
       this.sendMessage(this.message)
+      this.message = ''
     }
   },
 }

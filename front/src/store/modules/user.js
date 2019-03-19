@@ -4,7 +4,7 @@ import { login, register, signOut } from '@/services/rest'
 import { User } from '@/model'
 
 const state = {
-  hasLogin: false,
+  hasLogin: storageService.get('hasLogin', false),
   userInfo: storageService.get('userInfo', {})
 }
 
@@ -25,6 +25,7 @@ const actions = {
       commit(types.SET_USER_INFO, userInfo)
       storageService.set('userInfo', userInfo)
       commit(types.SET_LOGIN_STATUS)
+      storageService.set('hasLogin', true)
     } else {
       commit(types.SEND_ERROR, '用户名或密码错误')
     }
@@ -49,7 +50,6 @@ const getters = {
 
 const mutations = {
   [types.SET_USER_INFO](state, userInfo) {
-    debugger
     state.userInfo = userInfo
   },
   [types.REMOVE_USER_INFO](state) {

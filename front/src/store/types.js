@@ -7,7 +7,7 @@ export const REMOVE_LOGIN_STATUS = 'REMOVE_LOGIN_STATUS'
 export const INIT_FRIEND = "INIT_FRIEND"
 export const ADD_FRIEND = 'ADD_FRIEND'
 export const REMOVE_FRIEND = 'REMOVE_FRIEND'
-export const SET_FRIEND = 'SET_FRIEND'
+export const SET_FRIENDS = 'SET_FRIENDS'
 // Message 相关
 export const ADD_MESSAGE = 'ADD_MESSAGE'
 export const REMOVE_MESSAGE = 'REMOVE_MESSAGE'

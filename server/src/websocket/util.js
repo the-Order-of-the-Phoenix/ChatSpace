@@ -4,7 +4,7 @@ export const getMsgEntityFromMsg = (msg: string) => {
     entity = JSON.parse(msg)
     return entity
   } catch (e) {
-    return null
+    return {}
   }
 }
 

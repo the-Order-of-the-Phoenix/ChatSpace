@@ -16,5 +16,6 @@
   "send": "发送",
   "message_not_more_than": "请发送{0}字以内的消息",
   "should_remember_username": "是否记住用户名",
-  "sign_out": "登出"
+  "sign_out": "登出",
+  "add_friend": "添加好友"
 }

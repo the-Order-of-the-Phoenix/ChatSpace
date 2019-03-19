@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'chat-preview':true, 'chat-preview__active': isActive}">
+  <div :class="{'chat-preview':true, 'chat-preview__active': isActive}" @click="setCur">
     <img :src="avator" class="chat-preview_avator">
     <div class="chat-preview_middle">
       <span class="chat-preview_name">
@@ -16,14 +16,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'ChatPreview',
-  props: ['avator', 'name', 'message', 'time', 'isActive'],
+  props: ['avator', 'name', 'message', 'time', 'isActive','id'],
   computed: {
     displayTime: function () {
       return this.time || '今天'
     }
-  }
+  },
+  methods: {
+    ...mapActions(['setCurFriend']),
+    setCur() {
+      this.setCurFriend(this.id)
+    }
+  },
 }
 </script>
 
@@ -36,6 +44,7 @@ export default {
   height: 3.5rem;
   padding: .5rem;
   font-size: .5rem;
+  cursor: pointer;
 
   &__active {
     background-color: #ebebec;

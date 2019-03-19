@@ -30,8 +30,10 @@ function getRouter(): Router {
 
   router.post('/friend', UserController.needLogin, FriendController.requestFriend)
 
-  router.get('/friends', UserController.needLogin, FriendController.getFriendList)
+  router.post('/friend/accept', UserController.needLogin, FriendController.acceptFriendRequest)
 
+  router.get('/friends', UserController.needLogin, FriendController.getFriends)
+  
   router.get('/friend/requesting', UserController.needLogin, FriendController.getRequestingFriendList)
 
   router.delete('friend', UserController.needLogin, FriendController.delFriend)
@@ -55,6 +57,21 @@ function getRouter(): Router {
   return router
 }
 
-
+/*
+{
+    "friends": [],
+    "_id": "5c8418272457bf5c48316d19",
+    "username": "aak1247",
+    "phone": "123456789",
+    "__v": 0
+}
+{
+    "friends": [],
+    "_id": "5c8f576f6259271a0499d543",
+    "username": "test",
+    "phone": "123456789",
+    "__v": 0
+}
+*/
 
 export default getRouter

@@ -28,6 +28,9 @@ export default {
     event.on('endLoad', () => {
       this.removeLoading()
     })
+    event.on('error', (err) => {
+      debugger
+    })
   },
 }
 </script>

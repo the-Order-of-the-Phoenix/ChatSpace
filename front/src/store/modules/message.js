@@ -1,12 +1,14 @@
 import * as types from "../types";
 import storageService from "@/services/storageService";
 import ReconnectWebSocket from "../../../static/js/reconnecting-websocket.min.js";
-import { buildWsMessage } from '@/services/rest'
+import { buildWsMessage, retrieveMessage, getChats } from '@/services/rest'
+import {format} from '@/services/dateUtil' 
 
 const state = {
-  messages: new Map(),
+  messages: storageService.get("messages", []),
   ws: null,
-  curFriend: null
+  curFriend: null,
+  friends: storageService.get("friends", [])
 };
 
 const actions = {
@@ -23,28 +25,74 @@ const actions = {
     })
     ws.send(fullMessage)
   },
-  setCurFriend({ commit, rootState, rootGetters }, friendId) {
-    debugger
+  async setCurFriend({ commit, rootState, rootGetters }, friendId) {
+    //首先获取对应messages
+    let friendMessage = state.messages[friendId]
+    if (!friendMessage) {
+      let getMessageRes = await retrieveMessage(friendId)
+      let getMessageResJson = await getMessageRes.json()
+      let messages = getMessageResJson.messages
+      commit(types.SET_MESSAGE, {friend: friendId, messages})
+    }
+    //
     const url = 'ws://localhost:3000/' + friendId
+    state.ws && state.ws.close()
     const ws = new ReconnectWebSocket(url)
     ws.onopen = () => {
       const connectMessage = buildWsMessage(
         'connect',
         {
           session: rootState.user.userInfo.userId
-        }
+        } 
       )
       ws.send(connectMessage)
     }
+    ws.onmessage = (messageEvent) => {
+      let parsedMessageStr = JSON.parse(messageEvent.data)
+      if (parsedMessageStr.action == 'message') {
+        let body = parsedMessageStr.body
+        let message = {
+          sender: body.sender,
+          friend: body.friend,
+          content: body.content,
+          type: 'text',
+          created_at: body.created_at
+        }
+        commit(types.ADD_MESSAGE, {friend: friendId, message})
+      }
+    }
     commit(types.SET_CUR_FRIEND, friendId)
     commit(types.SET_WS, ws)
+  },
+  setMessage({ commit }, friend, messages) {
+    commit(types.SET_MESSAGE, {friend, messages})
+  },
+  async initFriends({ commit }) {
+    let req = await getChats()
+    let res = await req.json()
+    let friends = {}//.map(friend => friend.)
+    res.forEach(friend => friends[friend.id] = friend)
+    commit(types.SET_FRIENDS, friends)
+    storageService.set('friends', friends)
   }
 };
 
 const getters = {
   messages: state => state.messages,
   curFriend: state => state.curFriend,
-  ws: state => state.ws
+  ws: state => state.ws,
+  friends: state => state.friends,
+  curMessages: state => {
+    let messages = state.messages[state.curFriend]
+    let curFriend = state.curFriend
+    if (messages) messages.forEach(message => {
+      message.date = format(message.created_at)
+      message.name =
+        state.friends[curFriend] && state.friends[curFriend].username ||
+      "用户" + Math.floor(Math.random() * 100)
+    })
+    return messages
+  }
 };
 
 const mutations = {
@@ -54,8 +102,23 @@ const mutations = {
   [types.SET_WS](state, ws) {
     state.ws = ws
   },
-  [types.SET_MESSAGE](state, message) {
-    state.messages.push(message)
+  [types.ADD_MESSAGE](state, { friend, message }) {
+    let messages = state.messages
+    let curMessages = messages[friend]
+    if (!curMessages) {
+      curMessages = []
+    }
+    curMessages.push(message)
+    messages[friend] = curMessages
+    state.messages = { ...messages }
+  },
+  [types.SET_MESSAGE](state, { friend, messages }) {
+    let messagesObj = state.messages
+    messagesObj[friend] = messages
+    state.messages = {...messagesObj}
+  },
+  [types.SET_FRIENDS](state, friends) {
+    state.friends = friends
   }
 };
 

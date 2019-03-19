@@ -9,9 +9,13 @@ const MessageSchema = new Schema({
     type: ObjectId,
     ref: "user"
   },
-  receiver: {
+  friendMessage: {
     type: ObjectId,
-    ref: "user"
+    ref: "friendMessage"
+  },
+  friend: {
+    type: ObjectId,
+    ref: 'friend'
   },
   type: String,
   content: String,
