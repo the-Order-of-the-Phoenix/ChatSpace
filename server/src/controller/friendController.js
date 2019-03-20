@@ -20,6 +20,8 @@ export const requestFriend = async (ctx: koa.ParameterizedContext, next: () => P
       return
     }
 
+    // todo:判定是否是当前用户
+
     friend = await model.Friend.create({
       member: [user._id, targetUser._id],
       created_at: new Date(),
@@ -27,12 +29,18 @@ export const requestFriend = async (ctx: koa.ParameterizedContext, next: () => P
       status: 'normal'
     })
 
+    console.log(friend._id)
+    console.log(friend)
+    const friendId = friend._id
+
     const friendMessage = await model.FriendMessage.create({
-      friend: friend._Id,
+      friend: friendId,
       messages: []
     })
 
     targetUserId = targetUser._id
+
+    console.log(friendMessage)
     
   } else {
     friend = await model.Friend.create({
@@ -47,8 +55,6 @@ export const requestFriend = async (ctx: koa.ParameterizedContext, next: () => P
   const query = model.User.findById(targetUserId)
   const tarUser = await query.exec()
 
-  console.log(friend)
-  console.log(tarUser)
 
   if (!tarUser) {
     ctx.throw(new BaseError(404, '对应用户不存在'))

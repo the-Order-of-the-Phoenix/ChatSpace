@@ -32,7 +32,7 @@ import hash from '@/router/hash'
 export default {
   name: 'MessagerBar',
   methods: {
-    ...mapActions(['logOut']),
+    ...mapActions(['logOut', 'initFriends']),
     async doLogOut () {
       let res = await this.logOut()
       if (res.ok) {
@@ -47,7 +47,9 @@ export default {
       let username = input.value
       let req = await addFriendWithUsername(username)
       let res = await req.json()
-
+      if (req.ok) {
+         this.initFriends()
+      }
     }
   },
 }
