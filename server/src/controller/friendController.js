@@ -8,22 +8,41 @@ import { Types } from 'mongoose';
 export const requestFriend = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
   //发起好友申请
   const user = ctx.user
+  console.log(ctx.request.body)
   let targetUserId = ctx.request.body.friend
+  const targetUsername = ctx.request.body.username
+  let friend;
   if (!targetUserId) {
-    const targetUsername = ctx.request.body.username
+    console.log(targetUsername)
     const targetUser = await model.User.findOne({ username: targetUsername }).exec()
     if (!targetUser) {
       ctx.throw(new BaseError(404, '找不到对应用户'))
       return
     }
+
+    friend = await model.Friend.create({
+      member: [user._id, targetUser._id],
+      created_at: new Date(),
+      source: user._id,
+      status: 'normal'
+    })
+
+    const friendMessage = await model.FriendMessage.create({
+      friend: friend._Id,
+      messages: []
+    })
+
     targetUserId = targetUser._id
+    
+  } else {
+    friend = await model.Friend.create({
+      member: [user._id, targetUserId],
+      created_at: new Date(),
+      source: user._id,
+      status: 'requesting'
+    })
   }
-  const friend = await model.Friend.create({
-    member: [user._id, targetUserId],
-    created_at: new Date(),
-    source: user._id,
-    status: 'requesting'
-  })
+  
 
   const query = model.User.findById(targetUserId)
   const tarUser = await query.exec()
