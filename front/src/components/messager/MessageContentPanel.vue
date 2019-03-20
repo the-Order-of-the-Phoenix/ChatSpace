@@ -23,6 +23,14 @@ export default {
       return false
     }
   },
+  watch: {
+    messages: function () {
+      this.$nextTick(() => {
+        let contentWin = document.getElementById("message-content-panel")
+        contentWin.scrollTop = contentWin.scrollHeight
+      })
+    }
+  },
   components: {
     TextMessage,
     AudioMessage,
