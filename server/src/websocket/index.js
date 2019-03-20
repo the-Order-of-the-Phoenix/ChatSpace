@@ -6,26 +6,29 @@ import { Schema } from 'mongoose'
 
 function getWSRouter(users: object) {
   const router = new Router({})
+  const friends = {}
   router.all('/broadcast', async (ctx, next) => {
     console.log('broadcast')
   })
   router.all('/:friendId', async (ctx, next) => {
     console.log('friendId')
     console.log(ctx.params)
-    let friends = {}
-    let friendId = ctx.params.friendId
+    
     ctx.websocket.on('message', async function (message) {
+      let friendIdParam = ctx.params.friendId
       // 返回给前端的数据
       let messageObj = getMsgEntityFromMsg(message)
       let userId = getUserIdFromSession(messageObj.body.session);
       console.log(userId)
       if (messageObj.action == 'connect') {
         // 不处理
+        if (!friends[friendIdParam]) friends[friendIdParam] = []
+        friends[friendIdParam].push(ctx.websocket)
       }
       if (messageObj.action == 'message') {
         delete messageObj.session
         messageObj.body.created_at = new Date()
-        ctx.websocket.send(JSON.stringify(messageObj))
+        friends[friendIdParam].forEach(websocket => websocket.send(JSON.stringify(messageObj)))
         let receiverId = messageObj.body.receiver
         let friendId = messageObj.body.friend
         let content = messageObj.body.content
@@ -57,6 +60,10 @@ function getWSRouter(users: object) {
       if (messageObj.action == 'picture') {
         delete messageObj.session
         ctx.websocket.send(JSON.stringify(messageObj))
+      }
+      if (messageObj.action == 'disconnect') {
+        if (!friends[friendIdParam]) friends[friendIdParam] = [];
+        friends[friendIdParam].pop(ctx.websocket);
       }
     })
     ctx.websocket.on('close', function () {

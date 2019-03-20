@@ -35,8 +35,14 @@ const actions = {
       commit(types.SET_MESSAGE, {friend: friendId, messages})
     }
     //
-    const url = "ws://139.199.186.217:3000/" + friendId;
-    state.ws && state.ws.close()
+    const url = 'ws://139.199.186.217:3000/' + friendId
+    if (state.ws) {
+      let disconnectMessage = buildWsMessage('disconnect', {
+        session: rootState.user.userInfo.userId
+      })
+      state.ws.send(disconnectMessage)
+      state.ws.close()
+    }
     const ws = new ReconnectWebSocket(url)
     ws.onopen = () => {
       const connectMessage = buildWsMessage(
