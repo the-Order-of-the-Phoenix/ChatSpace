@@ -20,7 +20,6 @@ export default {
   },
 
   mounted() {
-    this.setCurFriend('5c906725a995e61bc005543e')
   },
 
   components: {
