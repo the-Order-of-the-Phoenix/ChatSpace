@@ -1,5 +1,9 @@
 # ChatSpace
-a chat root demo
+a chat app demo
+
+## info
+
+developing with ``koa``, ``vue`` and ``websocket``
 
 ## install
 
