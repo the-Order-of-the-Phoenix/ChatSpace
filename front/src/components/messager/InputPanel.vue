@@ -6,6 +6,7 @@ X<template>
     :rows="6" 
     :max-length="400"
     full-width
+    @keyup.enter="doSendMessage"
     solo></mu-text-field><br/>
     <mu-button color="primary" id="input-panel_send" @click="doSendMessage">
       {{$t('send')}}
@@ -16,6 +17,11 @@ X<template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
+//https://vuejsexamples.com/lightweight-package-of-emoji-picker-in-vue/
+//https://vuejsexamples.com/highly-customizable-unicode-emoji-picker/
+//https://vuejsexamples.com/tag/emoji/
+//todo: emoji
 
 export default {
   name: 'InputPanel',

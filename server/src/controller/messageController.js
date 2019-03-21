@@ -46,6 +46,20 @@ export const getMessage = async (ctx: koa.ParameterizedContext, next: () => Prom
   // ctx.throw(new BaseError(200, 'ok'))
 }
 
+export const getAllMessage = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
+  // 利用 user找到friend 然后获取friend对应的全部message
+  const user = ctx.user
+  const queryParam = ctx.request.query
+  const friendsMessages = await model.FriendMessage.find({
+    friend: {
+      '$in': user.friends
+    }
+  }).populate('messages').exec()
+  // messages = messages.map()
+  ctx.response.body = friendsMessages
+  // ctx.throw(new BaseError(200, 'ok'))
+}
+
 export const deleteMessage = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
 
 }

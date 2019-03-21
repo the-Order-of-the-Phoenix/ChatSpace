@@ -10,7 +10,7 @@ function isToday(str) {
   const date = (new Date())
   const today = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
   const yesterday = new Date(today - 24 * 3600 * 1000).getTime()
-  return theDate.getTime() > today && theDate < date
+  return theDate.getTime() >= today
 }
 
 function isYesterday(str) {

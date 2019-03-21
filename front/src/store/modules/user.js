@@ -31,10 +31,11 @@ const actions = {
     }
     return res
   },
-  async logOut({ commit }) {
+  async logOut({ commit, dispatch }) {
     let res = await signOut()
     let resJson = await res.json()
     if (res.ok) {
+      dispatch("closeConnection")
       commit(types.REMOVE_LOGIN_STATUS)
     } else {
       commit(types.SEND_ERROR, '登出失败')

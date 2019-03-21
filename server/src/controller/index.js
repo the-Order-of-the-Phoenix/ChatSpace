@@ -44,6 +44,8 @@ function getRouter(): Router {
 
   router.get('/message', UserController.needLogin, MessageController.getMessage)
 
+  router.get('/messages', UserController.needLogin, MessageController.getAllMessage)
+
   router.get('/file', UserController.needLogin, FileController.getFilePath)
 
   router.post('/file', UserController.needLogin, FileController.uploadFileSync)

@@ -100,6 +100,23 @@ export const retrieveMessage = (friendId: string) => {
     });
 }
 
+// 获取所有历史消息
+export const retrieveAllMessages = () => {
+  event.publish("startLoad");
+  return fetch(`${serviceUrl}/messages`, {
+    method: 'GET',
+    credentials: 'include'
+  })
+    .then(res => {
+      event.publish("endLoad");
+      return res;
+    })
+    .catch(err => {
+      event.publish("endLoad");
+      handleError(err);
+    });
+}
+
 export const CreateWebSocket = function (urlValue) {
   if (window.WebSocket) return new WebSocket(urlValue)
   if (window.MozWebSocket) return new MozWebSocket(urlValue)

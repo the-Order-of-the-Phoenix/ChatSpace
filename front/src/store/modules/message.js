@@ -1,7 +1,7 @@
 import * as types from "../types";
 import storageService from "@/services/storageService";
 import ReconnectWebSocket from "../../../static/js/reconnecting-websocket.min.js";
-import { buildWsMessage, retrieveMessage, getChats } from '@/services/rest'
+import { buildWsMessage, retrieveMessage, getChats, retrieveAllMessages } from '@/services/rest'
 import {format} from '@/services/dateUtil' 
 
 const state = {
@@ -34,8 +34,11 @@ const actions = {
       let messages = getMessageResJson.messages
       commit(types.SET_MESSAGE, {friend: friendId, messages})
     }
-    //
-    const url = 'ws://139.199.186.217:3000/' + friendId
+
+    commit(types.SET_CUR_FRIEND, friendId)
+  },
+
+  closeConnection({commit, rootState}) {
     if (state.ws) {
       let disconnectMessage = buildWsMessage('disconnect', {
         session: rootState.user.userInfo.userId
@@ -43,13 +46,32 @@ const actions = {
       state.ws.send(disconnectMessage)
       state.ws.close()
     }
+    commit(types.CLOSE_WS)
+  },
+
+  setMessage({ commit }, friend, messages) {
+    commit(types.SET_MESSAGE, {friend, messages})
+  },
+
+  async initFriends({ commit, rootState, dispatch }) {
+
+    if (state.ws) {
+      await dispatch('closeConnection')
+    }
+
+    let req = await getChats()
+    let res = await req.json()
+    let friends = {}//.map(friend => friend.)
+    res.forEach(friend => friends[friend.id] = friend)
+    const url = 'ws://139.199.186.217:3000/friend'
     const ws = new ReconnectWebSocket(url)
     ws.onopen = () => {
       const connectMessage = buildWsMessage(
         'connect',
         {
-          session: rootState.user.userInfo.userId
-        } 
+          session: rootState.user.userInfo.userId,
+          friends: res.map(f => f._id)
+        }
       )
       ws.send(connectMessage)
     }
@@ -64,20 +86,11 @@ const actions = {
           type: 'text',
           created_at: body.created_at
         }
-        commit(types.ADD_MESSAGE, {friend: friendId, message})
+        commit(types.ADD_MESSAGE, { friend: body.friend, message })
       }
     }
-    commit(types.SET_CUR_FRIEND, friendId)
+
     commit(types.SET_WS, ws)
-  },
-  setMessage({ commit }, friend, messages) {
-    commit(types.SET_MESSAGE, {friend, messages})
-  },
-  async initFriends({ commit }) {
-    let req = await getChats()
-    let res = await req.json()
-    let friends = {}//.map(friend => friend.)
-    res.forEach(friend => friends[friend.id] = friend)
     commit(types.SET_FRIENDS, friends)
     storageService.set('friends', friends)
   }
@@ -107,6 +120,9 @@ const mutations = {
   },
   [types.SET_WS](state, ws) {
     state.ws = ws
+  },
+  [types.CLOSE_WS](state) {
+    state.ws = null
   },
   [types.ADD_MESSAGE](state, { friend, message }) {
     let messages = state.messages

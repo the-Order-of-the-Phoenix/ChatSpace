@@ -10,27 +10,33 @@ function getWSRouter(users: object) {
   router.all('/broadcast', async (ctx, next) => {
     console.log('broadcast')
   })
-  router.all('/:friendId', async (ctx, next) => {
-    console.log('friendId')
-    console.log(ctx.params)
+  router.all('/friend', async (ctx, next) => {
     
     ctx.websocket.on('message', async function (message) {
-      let friendIdParam = ctx.params.friendId
       // 返回给前端的数据
       let messageObj = getMsgEntityFromMsg(message)
       let userId = getUserIdFromSession(messageObj.body.session);
+      let friendId = messageObj.body.friend
+      let friendIds = messageObj.body.friendIds
       console.log(userId)
       if (messageObj.action == 'connect') {
         // 不处理
-        if (!friends[friendIdParam]) friends[friendIdParam] = []
-        friends[friendIdParam].push(ctx.websocket)
+        if (friendId) {
+          if (!friends[friendId]) friends[friendId] = []
+          friends[friendId].push(ctx.websocket)
+        } else if (friendIds) {
+          friendIds.forEach(friendId => {
+            if (!friends[friendId]) friends[friendId] = []
+            friends[friendId].push(ctx.websocket)
+          })
+        }
       }
       if (messageObj.action == 'message') {
+        if (!friendId) return
         delete messageObj.session
         messageObj.body.created_at = new Date()
-        friends[friendIdParam].forEach(websocket => websocket.send(JSON.stringify(messageObj)))
+        friends[friendId].forEach(websocket => websocket.send(JSON.stringify(messageObj)))
         let receiverId = messageObj.body.receiver
-        let friendId = messageObj.body.friend
         let content = messageObj.body.content
         let receiver = await model.User.findById(receiverId).exec()
         let friend = await model.Friend.findById(friendId).exec()
@@ -60,14 +66,26 @@ function getWSRouter(users: object) {
       if (messageObj.action == 'picture') {
         delete messageObj.session
         ctx.websocket.send(JSON.stringify(messageObj))
+        //todo: 保存图片消息
       }
       if (messageObj.action == 'disconnect') {
-        if (!friends[friendIdParam]) friends[friendIdParam] = [];
-        friends[friendIdParam].pop(ctx.websocket);
+        if (friendId) {
+          if (!friends[friendId]) friends[friendId] = []
+          friends[friendId].pop(ctx.websocket)
+        } else if (friendIds) {
+          friendIds.forEach(friendId => {
+            if (!friends[friendId]) friends[friendId] = []
+            friends[friendId].pop(ctx.websocket)
+          })
+        }
       }
     })
     ctx.websocket.on('close', function () {
-      console.log('channel ', friendId,' closed')
+      console.log('channel friend closed')
+      friends= {}
+    })
+    ctx.websocket.on('error', function (e) {
+      console.log(e)
     })
   })
   return router

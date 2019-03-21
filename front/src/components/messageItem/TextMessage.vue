@@ -30,7 +30,7 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: row;
-  height: 3rem;
+  min-height: 3rem;
   
   align-items: center;
   padding: .5rem;

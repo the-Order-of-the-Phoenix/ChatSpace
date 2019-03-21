@@ -23,4 +23,5 @@ export const SEND_SUCCESS = 'SEND_SUCCESS'
 // socket
 export const SET_CUR_FRIEND = 'SET_CUR_FRIEND'
 export const SET_WS = 'SET_WS'
+export const CLOSE_WS = 'CLOSE_WS'
 export const SET_MESSAGE = 'SET_MESSAGE' // all message
