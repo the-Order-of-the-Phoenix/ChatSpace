@@ -34,7 +34,17 @@ function getWSRouter(users: object) {
         if (!friendId) return
         delete messageObj.session
         messageObj.body.created_at = new Date()
-        friends[friendId].forEach(websocket => websocket.send(JSON.stringify(messageObj)))
+        let toDelete = []
+        friends[friendId].forEach(websocket => {
+          if (websocket.OPEN == websocket.readyState) {
+            websocket.send(JSON.stringify(messageObj))
+          } else if (websocket.CLOSED == websocket.readyState || websocket.CLOSING == websocket.readyState){
+            toDelete.push(websocket)
+          }
+        })
+        toDelete.forEach(websocket => {
+          friends[friendId].pop(websocket)
+        })
         let receiverId = messageObj.body.receiver
         let content = messageObj.body.content
         let receiver = await model.User.findById(receiverId).exec()
@@ -79,8 +89,8 @@ function getWSRouter(users: object) {
         }
       }
     })
-    ctx.websocket.on('close', function () {
-      console.log('channel friend closed')
+    ctx.websocket.on('close', function (e) {
+      console.log('channel friend closed', e)
     })
     ctx.websocket.on('error', function (e) {
       console.error(e)

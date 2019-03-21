@@ -9,7 +9,7 @@
           </mu-breadcrumbs-item>
         </mu-breadcrumbs>
       </p>
-      <mu-form ref="form" :model="user" class="mu-form">
+      <mu-form ref="form" :model="user" class="mu-form" @keyup.enter="submit">
         <mu-form-item :label="$t('username')" prop="username" :rules="usernameRules">
           <mu-text-field v-model="user.username" prop="username"></mu-text-field>
         </mu-form-item>
@@ -74,7 +74,6 @@ export default {
       if (isValid) {
         let u = this.user
         let res = await register(u.username, u.password, u.phone)
-        console.log(res)
         if (res.ok) {
           this.$toast.success('注册成功，即将自动登录...')
           this.login(u.username, u.password).then(res => {

@@ -6,7 +6,8 @@ X<template>
     :rows="6" 
     :max-length="400"
     full-width
-    @keyup.enter="doSendMessage"
+    @keyup.enter.exact="doSendMessage"
+    @keyup.enter.ctrl="lineFeed"
     solo></mu-text-field><br/>
     <mu-button color="primary" id="input-panel_send" @click="doSendMessage">
       {{$t('send')}}
@@ -35,6 +36,9 @@ export default {
     doSendMessage () {
       this.sendMessage(this.message)
       this.message = ''
+    },
+    lineFeed () {
+      this.message += '\n'
     }
   },
 }

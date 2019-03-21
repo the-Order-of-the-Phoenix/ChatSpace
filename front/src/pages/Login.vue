@@ -9,7 +9,7 @@
           </mu-breadcrumbs-item>
         </mu-breadcrumbs>
       </p>
-      <mu-form ref="form" :model="user" class="mu-form">
+      <mu-form ref="form" :model="user" class="mu-form" @keyup.enter="submit">
         <mu-form-item :label="$t('username')" prop="username" :rules="usernameRules">
           <mu-text-field v-model="user.username" prop="username"></mu-text-field>
         </mu-form-item>

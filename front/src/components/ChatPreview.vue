@@ -6,7 +6,7 @@
         {{name}}
       </span>
       <span class="chat-preview_message">
-        {{trim(message, 15)}}
+        {{trim(message, 10)}}
       </span>
     </div>
     <div class="chat-preview_right">

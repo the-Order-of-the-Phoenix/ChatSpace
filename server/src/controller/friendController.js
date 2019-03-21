@@ -161,7 +161,6 @@ export const getFriend = async (ctx: koa.ParameterizedContext, next: () => Promi
 export const getFriends = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
   const user = ctx.user
   const expandUser = await model.User.findById(user._id).populate('friends').exec()
-  console.log(expandUser)
   const friendIds = expandUser.friends.filter(friend => friend.status != 'requesting').map(friend => friend._id)
 
   // const friendUserIds = expandUser.friends.map(f => f.member).reduce((a, b) => a.concat(b), []).filter(id + '' != user._id + '')
