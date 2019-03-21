@@ -93,6 +93,18 @@ const actions = {
     commit(types.SET_WS, ws)
     commit(types.SET_FRIENDS, friends)
     storageService.set('friends', friends)
+
+    dispatch('initAllMessages')
+  },
+
+  async initAllMessages({ commit }) {
+    let req = await retrieveAllMessages()
+    let res = await req.json()
+    res.forEach(message => {
+      let friendId = message.friend
+      let messages = message.messages
+      commit(types.SET_MESSAGE,{ friend: friendId, messages})
+    })
   }
 };
 
