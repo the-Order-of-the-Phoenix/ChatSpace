@@ -17,8 +17,7 @@ function getWSRouter(users: object) {
       let messageObj = getMsgEntityFromMsg(message)
       let userId = getUserIdFromSession(messageObj.body.session);
       let friendId = messageObj.body.friend
-      let friendIds = messageObj.body.friendIds
-      console.log(userId)
+      let friendIds = messageObj.body.friends
       if (messageObj.action == 'connect') {
         // 不处理
         if (friendId) {
@@ -82,10 +81,10 @@ function getWSRouter(users: object) {
     })
     ctx.websocket.on('close', function () {
       console.log('channel friend closed')
-      friends= {}
     })
     ctx.websocket.on('error', function (e) {
-      console.log(e)
+      console.error(e)
+      Object.assign(friends, {})
     })
   })
   return router

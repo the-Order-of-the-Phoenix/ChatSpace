@@ -70,7 +70,7 @@ const actions = {
         'connect',
         {
           session: rootState.user.userInfo.userId,
-          friends: res.map(f => f._id)
+          friends: res.map(f => f.id)
         }
       )
       ws.send(connectMessage)
