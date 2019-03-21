@@ -68,6 +68,7 @@ export default {
   }
   &_message{
     font-size: .6rem;
+    white-space: pre-wrap;
   }
 }
 </style>

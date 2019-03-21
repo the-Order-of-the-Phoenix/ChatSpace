@@ -7,7 +7,7 @@ X<template>
     :max-length="400"
     full-width
     @keyup.enter.exact="doSendMessage"
-    @keyup.enter.ctrl="lineFeed"
+    @keyup.enter.ctrl.exact="lineFeed"
     solo></mu-text-field><br/>
     <mu-button color="primary" id="input-panel_send" @click="doSendMessage">
       {{$t('send')}}
