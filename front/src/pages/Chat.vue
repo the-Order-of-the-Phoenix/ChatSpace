@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import hash from '@/router/hash'
 
@@ -16,10 +16,16 @@ export default {
   computed: {
     ...mapGetters(['hasLogin'])
   },
+  methods: {
+    ...mapActions(['closeConnection'])
+  },
   beforeMount() {
     if (!this.hasLogin) {
       this.$router.push(hash.loginHash)
     }
+  },
+  destroyed() {
+    this.closeConnection()
   },
   components: {
     Messager
