@@ -61,6 +61,20 @@ export const getAllMessage = async (ctx: koa.ParameterizedContext, next: () => P
 }
 
 export const deleteMessage = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {
-
+  const user = ctx.user
+  const body = ctx.request.body
+  const messageId = body.id
+  if (!messageId) {
+    ctx.throw(new BaseError(400, '参数缺失'))
+    return
+  }
+  // else
+  const delMessage = await model.Message.findByIdAndDelete(messageId).exec()
+  const modifyFriendMessage = await model.FriendMessage.findByIdAndUpdate(delMessage.friend, {
+    '$pull': {
+      messages: messageId
+    }
+  }).exec()
+  ctx.throw(new BaseError(200, 'ok'))
 }
 

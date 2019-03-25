@@ -9,38 +9,60 @@ X<template>
     @keyup.enter.exact="doSendMessage"
     @keyup.enter.ctrl.exact="lineFeed"
     solo></mu-text-field><br/>
+    
+    <mu-button color="primary" ref="emojiButton" fab small @click="openEmoji=!openEmoji" id="input-panel_emotion">
+      <mu-icon value="insert_emoticon"></mu-icon>
+    </mu-button>
     <mu-button color="primary" id="input-panel_send" @click="doSendMessage">
       {{$t('send')}}
       <mu-icon right value="send"></mu-icon>
     </mu-button>
+
+    <mu-popover cover :open.sync="openEmoji" :trigger="triggerEmoji">
+      <VEmojiPicker :pack="pack" @select="selectEmoji" />
+    </mu-popover>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-
-//https://vuejsexamples.com/lightweight-package-of-emoji-picker-in-vue/
-//https://vuejsexamples.com/highly-customizable-unicode-emoji-picker/
-//https://vuejsexamples.com/tag/emoji/
-//todo: emoji
+import VEmojiPicker from 'v-emoji-picker'
+import packData from 'v-emoji-picker/data/emojis.json'
 
 export default {
   name: 'InputPanel',
   data () {
     return {
-      message: ''
+      message: '',
+      triggerEmoji: null,
+      openEmoji: false,
+      pack: packData
     }
   },
   methods: {
     ...mapActions(['sendMessage']),
     doSendMessage () {
-      this.sendMessage(this.message)
-      this.message = ''
+      let message = this.message.trim()
+      if (message != '') {
+        this.sendMessage(this.message)
+        this.message = ''
+      } else {
+        this.$toast.message('不能发送空消息')
+      }
     },
     lineFeed () {
       this.message += '\n'
+    },
+    selectEmoji (emoji) {
+      this.message += emoji.emoji
     }
   },
+  mounted() {
+    this.triggerEmoji = this.$refs.emojiButton.$el
+  },
+  components: {
+    VEmojiPicker
+  }
 }
 </script>
 
@@ -53,6 +75,13 @@ export default {
   position: relative;
   textarea {
     overflow: hidden;
+  }
+  &_emotion {
+    position: absolute;
+    right: 110px;
+    bottom: 5px;
+    height: 36px;
+    width: 36px;
   }
   &_send {
     position: absolute;

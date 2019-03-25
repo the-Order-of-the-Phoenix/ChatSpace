@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'chat-preview':true, 'chat-preview__active': isActive}" @click="setCur">
+  <div :class="{'chat-preview':true, 'chat-preview__active': isActive}" @click="setCur" @contextmenu.prevent="showMenu">
     <img :src="avator" class="chat-preview_avator">
     <div class="chat-preview_middle">
       <span class="chat-preview_name">
@@ -12,6 +12,13 @@
     <div class="chat-preview_right">
       {{displayTime}}
     </div>
+    <mu-menu cover placement="bottom-end" :open.sync="open">
+      <mu-list slot="content" dense>
+        <mu-list-item button @click="deleteFriend">
+          <mu-list-item-title>删除好友</mu-list-item-title>
+        </mu-list-item>
+      </mu-list>
+    </mu-menu>
   </div>
 </template>
 
@@ -24,7 +31,8 @@ export default {
   props: ['avator', 'name', 'message', 'time', 'isActive','id'],
   data () {
     return {
-      trim
+      trim,
+      open: false
     }
   },
   computed: {
@@ -33,9 +41,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setCurFriend']),
+    ...mapActions(['setCurFriend', 'removeFriend']),
     setCur() {
       this.setCurFriend(this.id)
+    },
+    showMenu() {
+      this.open = !this.open
+    },
+    async deleteFriend () {
+      await this.removeFriend(this.id)
+      this.open = false
     }
   },
 }

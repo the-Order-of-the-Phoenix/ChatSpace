@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'text-message': true, left: !self, right: self}">
+  <div :class="{'text-message': true, left: !self, right: self}" @contextmenu.prevent="showMenu">
     <img class="text-message_avator" :src="defaultAvator" v-if="!self"/>
     <div :class="{'text-message_body': true, left: !self, right: self}">
       <p class="text-message_date">{{date}}</p>
@@ -8,20 +8,40 @@
       </div>
     </div>
     <img class="text-message_avator" :src="defaultAvator" v-if="self"/>
+    <mu-menu cover placement="bottom-end" :open.sync="openMenu">
+      <mu-list slot="content" dense>
+        <mu-list-item button @click="deleteMessage">
+          <mu-list-item-title>删除</mu-list-item-title>
+        </mu-list-item>
+      </mu-list>
+    </mu-menu>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import defaultAvator from '@/assets/default_avator.jpg'
 
 export default {
   name: 'TextMessage',
-  props: ['content', 'name', 'date', 'avator', 'self'],
+  props: ['content', 'name', 'date', 'avator', 'self', '_id'],
   data() {
     return {
-      defaultAvator
+      defaultAvator,
+      openMenu: false
     }
-  }
+  },
+  methods: {
+    ...mapActions(['removeMessage']),
+    showMenu () {
+      this.openMenu = !this.openMenu
+    },
+    async deleteMessage () {
+      await this.removeMessage(this._id)
+      this.openMenu = false
+    }
+  },
 }
 </script>
 

@@ -36,7 +36,7 @@ function getRouter(): Router {
   
   router.get('/friend/requesting', UserController.needLogin, FriendController.getRequestingFriendList)
 
-  router.delete('friend', UserController.needLogin, FriendController.delFriend)
+  router.delete('/friend', UserController.needLogin, FriendController.delFriend)
 
   router.get('/friend/:id', UserController.needLogin, FriendController.getFriend)
 
@@ -45,6 +45,8 @@ function getRouter(): Router {
   router.get('/message', UserController.needLogin, MessageController.getMessage)
 
   router.get('/messages', UserController.needLogin, MessageController.getAllMessage)
+
+  router.delete('/message', UserController.needLogin, MessageController.deleteMessage)
 
   router.get('/file', UserController.needLogin, FileController.getFilePath)
 

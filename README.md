@@ -8,7 +8,11 @@ developing with ``koa``, ``vue`` and ``websocket``
 ## install
 
 > git clone https://github.com/the-Order-of-the-Phoenix/ChatSpace.git
+>
+>
 > npm i
+>
+>
 > npm start
 
 ## dependency

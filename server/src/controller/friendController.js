@@ -85,12 +85,12 @@ export const delFriend = async (ctx: koa.ParameterizedContext, next: () => Promi
   const friendMessage = await model.FriendMessage.findOneAndDelete({ friend: friendId }).exec()
   const tarUserId = friend.member.filter(id => id + "" != user._id + "")[0]
   const tarUser = await model.User.findByIdAndUpdate(tarUserId, {
-    "$pop": {
+    "$pull": {
       friends: friendId
     }
   }).exec()
   const delFriendRes = await model.Friend.findByIdAndDelete(friendId).exec()
-     
+  ctx.throw(new BaseError(200, 'ok'))
 }
 
 export const getRequestingFriendList = async (ctx: koa.ParameterizedContext, next: () => Promise<any>) => {

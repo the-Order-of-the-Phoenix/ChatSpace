@@ -18,7 +18,7 @@ export const register = (username, password, phone) => {
     }),
     credentials: 'include',
   }).then(res => {
-    event.publish("endLoad");
+    event.publish('endLoad');
     return res
   }).catch(err => {
     event.publish('endLoad')
@@ -28,91 +28,91 @@ export const register = (username, password, phone) => {
 
 // 登录
 export const login = (username, password) => {
-  event.publish("startLoad");
+  event.publish('startLoad');
   return fetch(`${serviceUrl}/user/login`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       username,
       password
     }),
-    credentials: "include"
+    credentials: 'include'
   })
     .then(res => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       return res;
     })
     .catch(err => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       handleError(err)
     });
 }
 
 // 登出
 export const signOut = () => {
-  event.publish("startLoad");
+  event.publish('startLoad');
   return fetch(`${serviceUrl}/user/login`, {
-    method: "delete",
-    credentials: "include"
+    method: 'delete',
+    credentials: 'include'
   })
     .then(res => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       return res;
     })
     .catch(err => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       handleError(err);
     });
 }
 
 // 获取聊天列表
 export const getChats = () => {
-  event.publish("startLoad");
+  event.publish('startLoad');
   return fetch(`${serviceUrl}/friends`, {
     credentials: 'include'
   })
     .then(res => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       return res;
     })
     .catch(err => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       handleError(err);
     });
 }
 
 // 获取历史消息
 export const retrieveMessage = (friendId: string) => {
-  event.publish("startLoad");
+  event.publish('startLoad');
   return fetch(`${serviceUrl}/message?friend=${friendId}`, {
     method: 'GET',
     credentials: 'include'
   })
     .then(res => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       return res;
     })
     .catch(err => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       handleError(err);
     });
 }
 
 // 获取所有历史消息
 export const retrieveAllMessages = () => {
-  event.publish("startLoad");
+  event.publish('startLoad');
   return fetch(`${serviceUrl}/messages`, {
     method: 'GET',
     credentials: 'include'
   })
     .then(res => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       return res;
     })
     .catch(err => {
-      event.publish("endLoad");
+      event.publish('endLoad');
       handleError(err);
     });
 }
@@ -131,7 +131,7 @@ export const buildWsMessage = (action, body) => {
 }
 
 export const requestFriend = (friend: string) => {
-  event.publish("startLoad");
+  event.publish('startLoad');
   return fetch(`${serviceUrl}/friend`, {
     method: 'POST',
     body: JSON.stringify({
@@ -143,17 +143,17 @@ export const requestFriend = (friend: string) => {
     },
   })
     .then(res => {
-    event.publish("endLoad");
-    return res;
+    event.publish('endLoad')
+    return res
   })
     .catch(err => {
-      event.publish("endLoad");
-      handleError(err);
+      event.publish('endLoad')
+      handleError(err)
     });
 }
 
 export const addFriendWithUsername = (username: string) => {
-  event.publish("startLoad");
+  event.publish('startLoad');
   return fetch(`${serviceUrl}/friend`, {
     method: 'POST',
     body: JSON.stringify({
@@ -165,11 +165,56 @@ export const addFriendWithUsername = (username: string) => {
     },
   })
     .then(res => {
-      event.publish("endLoad");
+      event.publish('endLoad')
       return res;
     })
     .catch(err => {
-      event.publish("endLoad");
-      handleError(err);
+      event.publish('endLoad')
+      handleError(err)
     });
+}
+
+
+export const delFriend = (friend: string) => {
+  event.publish('startLoad')
+  return fetch(`${serviceUrl}/friend`, {
+    method: 'delete',
+    body: JSON.stringify({
+      friend
+    }),
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => {
+      event.publish('endLoad')
+      return res
+    })
+    .catch(err => {
+      event.publish('endLoad')
+      handleError(err)
+  })
+}
+
+export const delMessage = (messageId: string) => {
+  event.publish('startLoad')
+  return fetch(`${serviceUrl}/message`, {
+    method: 'delete',
+    body: JSON.stringify({
+      id: messageId
+    }),
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => {
+      event.publish('endLoad')
+      return res
+    })
+    .catch(err => {
+      event.publish('endLoad')
+      handleError(err)
+    })
 }

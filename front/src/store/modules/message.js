@@ -1,8 +1,8 @@
 import * as types from "../types";
 import storageService from "@/services/storageService";
 import ReconnectWebSocket from "../../../static/js/reconnecting-websocket.min.js";
-import { buildWsMessage, retrieveMessage, getChats, retrieveAllMessages } from '@/services/rest'
-import {format} from '@/services/dateUtil' 
+import { buildWsMessage, retrieveMessage, getChats, retrieveAllMessages, addFriendWithUsername, delFriend, delMessage } from '@/services/rest'
+import { format } from '@/services/dateUtil'
 
 const state = {
   messages: storageService.get("messages", []),
@@ -105,6 +105,27 @@ const actions = {
       let messages = message.messages
       commit(types.SET_MESSAGE,{ friend: friendId, messages})
     })
+  },
+
+  async addFriend({ commit }, username) {
+
+  },
+
+  async removeFriend({ commit }, id) {
+    const res = await delFriend(id)
+    const resJson = await res.json()
+    if (res.ok) {
+      commit(types.REMOVE_FRIEND, id)
+    }
+  },
+
+  async removeMessage({ commit }, id) {
+    const res = await delMessage(id)
+    const resJson = await res.json()
+    debugger
+    if (res.ok) {
+      commit(types.REMOVE_MESSAGE, {friend: state.curFriend, id})
+    }
   }
 };
 
@@ -153,6 +174,30 @@ const mutations = {
   },
   [types.SET_FRIENDS](state, friends) {
     state.friends = friends
+  },
+  [types.REMOVE_FRIEND](state, friendId) {
+    let messagesObj = state.messages
+    delete messagesObj[friendId]
+    state.messages = { ...messagesObj }
+    let friendsObj = state.friends
+    delete friendsObj[friendId]
+    state.friends = {...friendsObj}
+  },
+  [types.REMOVE_MESSAGE](state, { friend, id }) {
+    let messagesObj = state.messages
+    let curMessages = messagesObj[friend]
+    let idxToDel = -1
+    for (let idx in curMessages) {
+      let message = curMessages[idx]
+      if (message._id === id) {
+        idxToDel = idx
+      }
+    }
+    if (idxToDel != -1) {
+      curMessages.splice(idxToDel, 1)
+    }
+    messagesObj[friend] = curMessages
+    state.messages = { ...messagesObj }
   }
 };
 
