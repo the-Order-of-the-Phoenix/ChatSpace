@@ -37,7 +37,9 @@ export default {
   },
   computed: {
     displayTime: function () {
-      return this.time || '今天'
+      let str = this.time || '今天'
+      if (str.length > 10) str = str.substring(0, 10)
+      return str
     }
   },
   methods: {
@@ -98,7 +100,8 @@ export default {
   &_right {
     display: flex;
     flex-direction: column;
-    width: 3rem;
+    width: 6rem;
+    align-items: flex-end;
   }
 }
 </style>

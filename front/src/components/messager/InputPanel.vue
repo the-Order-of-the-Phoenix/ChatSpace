@@ -55,6 +55,7 @@ export default {
     },
     selectEmoji (emoji) {
       this.message += emoji.emoji
+      this.openEmoji = false
     }
   },
   mounted() {
