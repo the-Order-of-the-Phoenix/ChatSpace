@@ -100,7 +100,7 @@ export default {
   &_right {
     display: flex;
     flex-direction: column;
-    width: 6rem;
+    width: 10rem;
     align-items: flex-end;
   }
 }
