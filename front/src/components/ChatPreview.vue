@@ -68,6 +68,7 @@ export default {
   padding: .5rem;
   font-size: .5rem;
   cursor: pointer;
+  position: relative;
 
   &__active {
     background-color: #ebebec;
@@ -98,6 +99,8 @@ export default {
   }
 
   &_right {
+    position: absolution;
+    right: 5;
     display: flex;
     flex-direction: column;
     width: 10rem;
