@@ -99,8 +99,8 @@ export default {
   }
 
   &_right {
-    position: absolution;
-    right: 5;
+    position: absolute;
+    right: 5px;
     display: flex;
     flex-direction: column;
     width: 10rem;
