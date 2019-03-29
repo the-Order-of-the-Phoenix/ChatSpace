@@ -1,8 +1,9 @@
 import Event from './dispatch'
 import handleError from './handleError'
+import config from '@/config'
 
 const event = Event()
-const serviceUrl = "http://139.199.186.217:3000";
+const serviceUrl = `http://${config.server.url}:3000`
 // 注册
 export const register = (username, password, phone) => {
   event.publish('startLoad')

@@ -3,6 +3,7 @@ import storageService from "@/services/storageService";
 import ReconnectWebSocket from "../../../static/js/reconnecting-websocket.min.js";
 import { buildWsMessage, retrieveMessage, getChats, retrieveAllMessages, addFriendWithUsername, delFriend, delMessage } from '@/services/rest'
 import { format } from '@/services/dateUtil'
+import config from '@/config'
 
 const state = {
   messages: storageService.get("messages", []),
@@ -41,7 +42,8 @@ const actions = {
   closeConnection({commit, rootState}) {
     if (state.ws) {
       let disconnectMessage = buildWsMessage('disconnect', {
-        session: rootState.user.userInfo.userId
+        session: rootState.user.userInfo.userId,
+        friends: Object.keys(state.friends)
       })
       state.ws.send(disconnectMessage)
       state.ws.close()
@@ -63,7 +65,7 @@ const actions = {
     let res = await req.json()
     let friends = {}//.map(friend => friend.)
     res.forEach(friend => friends[friend.id] = friend)
-    const url = 'ws://139.199.186.217:3000/friend'
+    const url = `ws://${config.server.url}:3000/friend`
     const ws = new ReconnectWebSocket(url)
     ws.onopen = () => {
       const connectMessage = buildWsMessage(
@@ -84,7 +86,8 @@ const actions = {
           friend: body.friend,
           content: body.content,
           type: 'text',
-          created_at: body.created_at
+          created_at: body.created_at,
+          _id: body._id
         }
         commit(types.ADD_MESSAGE, { friend: body.friend, message })
       }

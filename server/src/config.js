@@ -6,6 +6,9 @@ const config = {
     pass: 'password',
     db: 'test',
     authDb: 'admin'
+  },
+  websocket: {
+    retry: 10
   }
 }
 

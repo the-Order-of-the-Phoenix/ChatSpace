@@ -3,10 +3,14 @@ import Router from 'koa-router'
 import { getMsgEntityFromMsg, getUserIdFromSession } from './util'
 import model from '../schema'
 import { Schema } from 'mongoose'
+import config from '../config'
+
+const retryTimes = config.websocket.retry
 
 function getWSRouter(users: object) {
   const router = new Router({})
   const friends = {}
+  const retryCounter = {}
   router.all('/broadcast', async (ctx, next) => {
     console.log('broadcast')
   })
@@ -33,18 +37,10 @@ function getWSRouter(users: object) {
       if (messageObj.action == 'message') {
         if (!friendId) return
         delete messageObj.session
-        messageObj.body.created_at = new Date()
         let toDelete = []
-        friends[friendId].forEach(websocket => {
-          if (websocket.OPEN == websocket.readyState) {
-            websocket.send(JSON.stringify(messageObj))
-          } else if (websocket.CLOSED == websocket.readyState || websocket.CLOSING == websocket.readyState){
-            toDelete.push(websocket)
-          }
-        })
-        toDelete.forEach(websocket => {
-          friends[friendId].pop(websocket)
-        })
+        // toDelete.forEach(websocket => {
+        //   friends[friendId].pop(websocket)
+        // })
         let receiverId = messageObj.body.receiver
         let content = messageObj.body.content
         let receiver = await model.User.findById(receiverId).exec()
@@ -56,6 +52,19 @@ function getWSRouter(users: object) {
           type: 'text',
           content,
           created_at: new Date()
+        })
+        messageObj.body.created_at = message.created_at
+        messageObj.body._id = message._id
+        friends[friendId].forEach(websocket => {
+          if (websocket.OPEN == websocket.readyState) {
+            try {
+              websocket.send(JSON.stringify(messageObj))
+            } catch (e) {
+              console.error(e)
+            }
+          } else if (websocket.CLOSED == websocket.readyState || websocket.CLOSING == websocket.readyState) {
+            toDelete.push(websocket)
+          }
         })
         // 查询关联
         let friendMessage = await model.FriendMessage.findOne({
@@ -80,11 +89,13 @@ function getWSRouter(users: object) {
       if (messageObj.action == 'disconnect') {
         if (friendId) {
           if (!friends[friendId]) friends[friendId] = []
-          friends[friendId].pop(ctx.websocket)
+          let res = friends[friendId].pop(ctx.websocket)
+          console.log(res, " disconnect log of ", friendId)
         } else if (friendIds) {
           friendIds.forEach(friendId => {
             if (!friends[friendId]) friends[friendId] = []
-            friends[friendId].pop(ctx.websocket)
+            let res = friends[friendId].pop(ctx.websocket)
+            console.log(res, ' disconnect log of ', friendIds)
           })
         }
       }
