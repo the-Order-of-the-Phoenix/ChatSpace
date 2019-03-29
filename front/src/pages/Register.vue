@@ -76,7 +76,7 @@ export default {
         let res = await register(u.username, u.password, u.phone)
         if (res.ok) {
           this.$toast.success('注册成功，即将自动登录...')
-          this.login(u.username, u.password).then(res => {
+          this.login(u).then(res => {
             this.$router.push({path: hash.chatHash})
           })
         } else {

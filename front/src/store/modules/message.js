@@ -140,12 +140,17 @@ const getters = {
   curMessages: state => {
     let messages = state.messages[state.curFriend]
     let curFriend = state.curFriend
-    if (messages) messages.forEach(message => {
+    if (messages)
+    {
+      messages.forEach(message => {
       message.date = format(message.created_at)
       message.name =
         state.friends[curFriend] && state.friends[curFriend].username ||
       "用户" + Math.floor(Math.random() * 100)
-    })
+      })
+    } else {
+      messages = []
+    }
     return messages
   }
 };
