@@ -1,0 +1,9 @@
+| 错误情况       | code | message            |
+| -------------- | ---- | ------------------ |
+| 登录账号不存在 | 1001 | username_not_exist |
+| 登录密码错误   | 1002 | password_wrong     |
+| 当前未登录     | 1003 | not_login          |
+| 好友不存在     | 2001 | friend_not_exist   |
+| 删除失败       | 3001 | delete_failed      |
+| 修改失败       | 3002 | update_failed      |
+| 添加失败       | 3003 | create_failed      |

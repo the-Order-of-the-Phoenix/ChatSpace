@@ -26,7 +26,8 @@
         friend: "0000000", // via friend
         session: "xxxxxxx",
         friend: "xxxxxx", // friend id
-        created_at: "2018-01-01" // only needed in communication from server to client
+        created_at: "2018-01-01", // only needed in communication from server to client
+        _id: "xxxxxxx" // only needed from server to client
     }
 }
 ```
@@ -41,7 +42,8 @@
         session: "xxxxxxxx",
         receiver: "000000",
         sender: "xxxxxx",
-        friend: "xxxxxxx"
+        friend: "xxxxxxx",
+        _id: "xxxxxx" // only needed from server to client
     }
 }
 ```

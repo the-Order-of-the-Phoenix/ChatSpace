@@ -12,6 +12,7 @@ export const requestFriend = async (ctx: koa.ParameterizedContext, next: () => P
   let targetUserId = ctx.request.body.friend
   const targetUsername = ctx.request.body.username
   let friend;
+  //todo 先找有没有
   if (!targetUserId) {
     console.log(targetUsername)
     const targetUser = await model.User.findOne({ username: targetUsername }).exec()
@@ -171,19 +172,24 @@ export const getFriends = async (ctx: koa.ParameterizedContext, next: () => Prom
   }).populate('member').exec()
   const friendUsers = friends.map(friend => {
     let res = {}
-    res.id = friend._id
-    let tarUser = friend.member.filter(m => m._id + '' != user._id + '')[0]
-    res.username = tarUser.username
-    res.avator = tarUser.avator
-    res.name = tarUser.name
-    res.nickName = tarUser.nickName
-    res.phone = tarUser.phone
-    res.gender = tarUser.gender
-    res.birthday = tarUser.birthday
-    res.city = tarUser.city
-    res.userId = tarUser._id
+    try {
+      res.id = friend._id
+      let tarUser = friend.member.filter(m => m._id + '' != user._id + '')[0]
+      res.username = tarUser.username
+      res.avator = tarUser.avator
+      res.name = tarUser.name
+      res.nickName = tarUser.nickName
+      res.phone = tarUser.phone
+      res.gender = tarUser.gender
+      res.birthday = tarUser.birthday
+      res.city = tarUser.city
+      res.userId = tarUser._id
+    } catch (e) {
+      res = null
+    }
+
     return res
-  })
+  }).filter(friend => friend != null)
   ctx.response.body = friendUsers
 }
 
