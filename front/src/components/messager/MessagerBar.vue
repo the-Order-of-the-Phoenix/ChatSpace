@@ -48,7 +48,12 @@ export default {
       let req = await addFriendWithUsername(username)
       let res = await req.json()
       if (req.ok) {
+        this.$toast.success("添加成功")
          this.initFriends()
+      } else {
+        if (res.code == 404) {
+          this.$toast.error(res.message)
+        }
       }
     }
   },
