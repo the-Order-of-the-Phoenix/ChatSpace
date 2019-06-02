@@ -1,10 +1,10 @@
 const config = {
   db: {
-    host: '39.108.12.107',
+    host: 'localhost',
     port: '27017',
-    user: 'admin',
+    user: 'user',
     pass: 'password',
-    db: 'test',
+    db: 'db',
     authDb: 'admin'
   },
   websocket: {
